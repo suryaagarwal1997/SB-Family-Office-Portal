@@ -2,7 +2,7 @@
    Stores only the public sign-in page, the manifest and the icons, so the app opens quickly and can show
    a clear "you're offline" message. It never stores the encrypted dashboard or user list (data/), the
    GitHub API, the Google Sheet connector or anything else that carries portfolio information. */
-const CACHE = "sbfo-shell-v2";
+const CACHE = "sbfo-shell-v3";
 const SHELL = ["./", "manifest.webmanifest", "icons/icon-192.png", "icons/icon-512.png", "icons/apple-touch-icon.png", "icons/favicon-32.png"];
 
 self.addEventListener("install", e => {
@@ -19,8 +19,9 @@ self.addEventListener("fetch", e => {
   if (url.pathname.includes("/data/")) return;                               // encrypted data: never cached
 
   if (req.mode === "navigate") {
-    // Network first so updates arrive immediately; the cached sign-in page is only used offline.
-    e.respondWith(fetch(req).then(res => {
+    // Network first, and always checked with the server ("no-cache"), so a new version shows on the next visit.
+    // The cached sign-in page is only used offline.
+    e.respondWith(fetch(req.url, { cache: "no-cache", credentials: "include" }).then(res => {
       if (res.ok) { const copy = res.clone(); caches.open(CACHE).then(c => c.put("./", copy)); }
       return res;
     }).catch(() => caches.match("./")));
