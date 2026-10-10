@@ -1,0 +1,627 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>SB Family Office</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F5EFE3; --surface:#FFFCF5; --ink:#16302A; --muted:#6B7069; --line:#E3D9C4;
+  --accent:#9C7F45; --gain:#1E7A4C; --loss:#B3261E; --chip:#EDE4D1; --focus:#9C7F45;
+  --shadow:0 1px 2px rgba(22,48,42,.05),0 8px 24px rgba(22,48,42,.07);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0C231C; --surface:#112E26; --ink:#F1EADB; --muted:#A3B5AA; --line:#1F4437;
+    --accent:#B89B5E; --gain:#82CB9D; --loss:#E8867C; --chip:#173A30; --focus:#C9AE70;
+    --shadow:0 1px 2px rgba(0,0,0,.28),0 12px 32px rgba(0,0,0,.22);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0C231C; --surface:#112E26; --ink:#F1EADB; --muted:#A3B5AA; --line:#1F4437;
+  --accent:#B89B5E; --gain:#82CB9D; --loss:#E8867C; --chip:#173A30; --focus:#C9AE70;
+  --shadow:0 1px 2px rgba(0,0,0,.28),0 12px 32px rgba(0,0,0,.22);
+}
+*,*::before,*::after{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 "IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif}
+[hidden]{display:none!important}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+button{font:inherit;color:inherit}
+
+/* sign-in screens */
+.center{min-height:100%;display:flex;align-items:center;justify-content:center;padding:24px 16px}
+.card{width:100%;max-width:400px;background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:34px 28px 26px}
+.mark{width:44px;height:44px;border-radius:50%;border:1.5px solid var(--accent);display:grid;place-items:center;color:var(--accent);
+  font:600 17px/1 "Playfair Display",Georgia,serif;letter-spacing:.5px;margin-bottom:18px;flex:none}
+h1{font:600 24px/1.25 "Playfair Display",Georgia,serif;margin:0}
+h2{font:600 20px/1.3 "Playfair Display",Georgia,serif;margin:0}
+h3{font-size:15px;font-weight:600;margin:0 0 4px}
+.sub{color:var(--muted);font-size:13.5px;margin:6px 0 22px}
+label.lbl{display:block;font-size:13px;font-weight:500;margin:0 0 6px}
+.field{margin-bottom:16px}
+input[type=email],input[type=text],input[type=password],select{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:9px;padding:10px 12px}
+input:focus,select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 22%,transparent)}
+.remember{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);margin:2px 0 20px;cursor:pointer}
+.remember input{accent-color:var(--accent);width:15px;height:15px;margin:0}
+.btn{border:1px solid var(--line);background:var(--surface);border-radius:9px;padding:8px 14px;cursor:pointer;font-weight:500;font-size:13.5px;white-space:nowrap}
+.btn:hover{border-color:var(--accent)}
+.btn.primary{background:var(--ink);color:var(--surface);border-color:var(--ink);font-weight:600}
+.btn.wide{width:100%;padding:11px 14px;font-size:14.5px}
+.btn.danger{color:var(--loss)}
+.btn[disabled]{opacity:.6;cursor:progress}
+.link{border:0;background:none;color:var(--muted);text-decoration:underline;cursor:pointer;font-size:13px;padding:0}
+.msg{min-height:20px;font-size:13px;margin-top:12px}
+.msg.err{color:var(--loss)} .msg.ok{color:var(--gain)}
+.note{font-size:12.5px;color:var(--muted)}
+.foot{margin-top:18px;padding-top:14px;border-top:1px solid var(--line);font-size:12px;color:var(--muted)}
+.shake{animation:shake .35s}
+@keyframes shake{20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
+.spin{width:28px;height:28px;border-radius:50%;border:2.5px solid var(--line);border-top-color:var(--accent);animation:sp 0.8s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.shake{animation:none}.spin{animation-duration:3s}}
+
+/* signed-in shell */
+#app{height:100%;display:flex;flex-direction:column}
+.bar{display:flex;align-items:center;gap:10px 16px;padding:8px 16px;padding-top:max(8px,env(safe-area-inset-top));border-bottom:1px solid var(--line);background:var(--surface)}
+.bar .mark{width:30px;height:30px;font-size:12px;margin:0}
+.bar .name{font:600 16px/1.2 "Playfair Display",Georgia,serif}
+.bar .who{margin-left:auto;font-size:13px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.bar nav{display:flex;gap:6px}
+.bar .btn{padding:6px 11px;font-size:13px}
+#dash{flex:1;width:100%;border:0;display:block;background:var(--bg)}
+@media (max-width:560px){.bar .name,.bar .who{display:none}.bar nav{margin-left:auto}}
+
+/* dialogs */
+dialog{border:1px solid var(--line);border-radius:16px;background:var(--surface);color:var(--ink);box-shadow:var(--shadow);padding:0;width:min(440px,calc(100vw - 32px));max-height:calc(100dvh - 32px)}
+dialog.big{width:min(880px,calc(100vw - 32px))}
+dialog::backdrop{background:rgba(6,20,16,.55)}
+.dlg{padding:24px 24px 20px;overflow:auto;max-height:calc(100dvh - 34px)}
+.dlg-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
+.x{border:0;background:transparent;font-size:22px;line-height:1;cursor:pointer;color:var(--muted);padding:4px 8px;border-radius:6px}
+section.blk{border-top:1px solid var(--line);padding:18px 0 4px}
+section.blk:first-of-type{border-top:0;padding-top:0}
+.tbl-wrap{overflow-x:auto;margin:10px 0 6px}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th{text-align:left;font-weight:500;color:var(--muted);font-size:12.5px;padding:6px 10px 6px 0;border-bottom:1px solid var(--line)}
+td{padding:9px 10px 9px 0;border-bottom:1px solid var(--line);vertical-align:middle}
+.acts{display:flex;flex-wrap:wrap;gap:6px}
+.acts .btn{padding:5px 10px;font-size:12.5px}
+@media (max-width:640px){
+  table,tbody,tr,td{display:block} thead{display:none}
+  tr{border-bottom:1px solid var(--line);padding:10px 0}
+  td{border:0;padding:2px 0}
+  td.act{padding-top:8px}
+}
+input[type=file]{font:inherit;font-size:13px;color:var(--muted);min-width:0;max-width:100%}
+input[type=file]::file-selector-button{font:inherit;font-size:13px;font-weight:500;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:9px;padding:7px 12px;margin-right:10px;cursor:pointer}
+.tag{display:inline-block;font-size:11.5px;background:var(--chip);border-radius:6px;padding:1px 7px;margin-left:6px;color:var(--muted)}
+.warn{color:var(--accent);font-weight:500}
+.row{display:grid;grid-template-columns:2fr 1fr 1.4fr auto;gap:8px;align-items:end;margin-top:14px}
+.row input,.row select{height:42px}
+.row .btn{height:42px}
+.row .field{margin:0}
+@media (max-width:640px){.row{grid-template-columns:1fr}}
+.result{background:var(--chip);border-radius:10px;padding:12px 14px;margin:0 0 16px;font-size:13.5px}
+.result code{font:600 15px/1.4 ui-monospace,Consolas,monospace;background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:2px 8px;margin:0 6px;user-select:all}
+.inline{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:10px}
+.inline input{flex:1;min-width:200px}
+ol.steps{margin:8px 0;padding-left:20px;font-size:13px;color:var(--muted)}
+ol.steps li{margin:2px 0}
+a{color:var(--accent)}
+</style>
+</head>
+<body>
+
+<div id="boot" class="center"><div class="spin" role="status" aria-label="Loading"></div></div>
+
+<main id="login" class="center" hidden>
+  <div class="card" id="loginCard">
+    <div class="mark" aria-hidden="true">SB</div>
+    <h1>Family Office Portfolio</h1>
+    <p class="sub">Restricted access. Sign in with your email.</p>
+    <form id="loginForm" novalidate>
+      <div class="field">
+        <label class="lbl" for="lEmail">Email</label>
+        <input id="lEmail" type="email" autocomplete="username" autocapitalize="none" spellcheck="false" required>
+      </div>
+      <div class="field">
+        <label class="lbl" for="lPw">Password</label>
+        <input id="lPw" type="password" autocomplete="current-password" required>
+      </div>
+      <label class="remember"><input type="checkbox" id="lRem"> Keep me signed in on this device</label>
+      <button class="btn primary wide" id="lGo" type="submit">Sign in</button>
+      <div class="msg err" id="lMsg" role="alert" aria-live="assertive"></div>
+    </form>
+    <div class="foot">Forgot your password? Ask the admin to reset it.</div>
+  </div>
+</main>
+
+<main id="setpw" class="center" hidden>
+  <div class="card">
+    <div class="mark" aria-hidden="true">SB</div>
+    <h1>Choose your password</h1>
+    <p class="sub">You're signed in with a starting or temporary password. Set your own before continuing.</p>
+    <form id="spForm" novalidate>
+      <div class="field">
+        <label class="lbl" for="spNew">New password</label>
+        <input id="spNew" type="password" autocomplete="new-password" required>
+      </div>
+      <div class="field">
+        <label class="lbl" for="spConf">Confirm new password</label>
+        <input id="spConf" type="password" autocomplete="new-password" required>
+      </div>
+      <p class="note" style="margin:-4px 0 18px">At least 10 characters. Avoid simple number runs and your name.</p>
+      <button class="btn primary wide" id="spGo" type="submit">Save and continue</button>
+      <div class="msg err" id="spMsg" role="alert" aria-live="assertive"></div>
+    </form>
+    <div class="foot"><button class="link" type="button" data-signout>Sign out</button></div>
+  </div>
+</main>
+
+<div id="app" hidden>
+  <header class="bar">
+    <div class="mark" aria-hidden="true">SB</div>
+    <span class="name">Family Office</span>
+    <span class="who" id="who"></span>
+    <nav>
+      <button class="btn" id="adminBtn" type="button" hidden>Admin</button>
+      <button class="btn" id="acctBtn" type="button">Change password</button>
+      <button class="btn" type="button" data-signout>Sign out</button>
+    </nav>
+  </header>
+  <iframe id="dash" title="Portfolio dashboard"></iframe>
+</div>
+
+<dialog id="acct" aria-labelledby="acctTitle">
+  <div class="dlg">
+    <div class="dlg-head"><h2 id="acctTitle">Change password</h2><button class="x" type="button" data-close aria-label="Close">×</button></div>
+    <form id="cpForm" novalidate>
+      <input type="text" autocomplete="username" id="cpUser" hidden>
+      <div class="field">
+        <label class="lbl" for="cpCur">Current password</label>
+        <input id="cpCur" type="password" autocomplete="current-password" required>
+      </div>
+      <div class="field">
+        <label class="lbl" for="cpNew">New password</label>
+        <input id="cpNew" type="password" autocomplete="new-password" required>
+      </div>
+      <div class="field">
+        <label class="lbl" for="cpConf">Confirm new password</label>
+        <input id="cpConf" type="password" autocomplete="new-password" required>
+      </div>
+      <p class="note" style="margin:-4px 0 16px">At least 10 characters.</p>
+      <button class="btn primary wide" id="cpGo" type="submit">Change password</button>
+      <div class="msg" id="cpMsg" role="status" aria-live="polite"></div>
+    </form>
+  </div>
+</dialog>
+
+<dialog id="admin" class="big" aria-labelledby="admTitle">
+  <div class="dlg">
+    <div class="dlg-head"><h2 id="admTitle">Admin</h2><button class="x" type="button" data-close aria-label="Close">×</button></div>
+    <div id="admResult"></div>
+    <div class="msg" id="admMsg" role="status" aria-live="polite" style="margin:-6px 0 10px"></div>
+    <div id="admBody"></div>
+  </div>
+</dialog>
+
+<script>
+"use strict";
+/* Repository that hosts this site. On github.io it is read from the address; the values below are only a fallback. */
+const CONFIG = (() => {
+  const c = { owner: "suryaagarwal1997", repo: "SB-Family-Office-Portal", branch: "main" };
+  const h = location.hostname.match(/^([^.]+)\.github\.io$/i), seg = location.pathname.split("/").filter(Boolean)[0];
+  if (h) { c.owner = h[1]; if (seg && !/\.html?$/i.test(seg)) c.repo = seg; }
+  return Object.assign(c, { usersPath: "data/users.json", dashPath: "data/dashboard.enc", iter: 600000 });
+})();
+const API = "https://api.github.com/repos/" + CONFIG.owner + "/" + CONFIG.repo;
+const SESSION_KEY = "sbfo_session";
+const COMMON = ["123456789", "1234567890", "12345678910", "password", "password1", "password123", "qwerty123", "qwertyuiop", "iloveyou", "admin12345", "surya.agarwal", "alcoverealty"];
+
+const $ = id => document.getElementById(id);
+const te = new TextEncoder(), td = new TextDecoder();
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const normEmail = e => String(e || "").trim().toLowerCase();
+const rand = n => crypto.getRandomValues(new Uint8Array(n));
+const hex = a => Array.from(a, x => x.toString(16).padStart(2, "0")).join("");
+function b64(bytes) { const a = new Uint8Array(bytes); let s = ""; for (let i = 0; i < a.length; i += 0x8000) s += String.fromCharCode.apply(null, a.subarray(i, i + 0x8000)); return btoa(s); }
+function unb64(s) { const b = atob(s), a = new Uint8Array(b.length); for (let i = 0; i < b.length; i++) a[i] = b.charCodeAt(i); return a; }
+
+/* ---------- crypto ----------
+   The dashboard is encrypted with one content key (AES-256-GCM). Each user has an RSA key pair: the
+   private key is encrypted with a key derived from their password (PBKDF2-SHA256), and the content key
+   is sealed to their public key. The admin can add or reset a user without knowing anyone's password,
+   and can replace the content key for everyone when a user is removed. */
+const RSA = { name: "RSA-OAEP", modulusLength: 2048, publicExponent: new Uint8Array([1, 0, 1]), hash: "SHA-256" };
+const importCk = raw => crypto.subtle.importKey("raw", raw, "AES-GCM", false, ["encrypt", "decrypt"]);
+async function pwKey(password, salt, iter) {
+  const base = await crypto.subtle.importKey("raw", te.encode(password), "PBKDF2", false, ["deriveKey"]);
+  return crypto.subtle.deriveKey({ name: "PBKDF2", hash: "SHA-256", salt, iterations: iter }, base, { name: "AES-GCM", length: 256 }, false, ["encrypt", "decrypt"]);
+}
+async function seal(key, bytes) { const iv = rand(12); return { iv: b64(iv), ct: b64(await crypto.subtle.encrypt({ name: "AES-GCM", iv }, key, bytes)) }; }
+async function unseal(key, box) { return new Uint8Array(await crypto.subtle.decrypt({ name: "AES-GCM", iv: unb64(box.iv) }, key, unb64(box.ct))); }
+async function sealCk(pubB64, ck) {
+  const pub = await crypto.subtle.importKey("spki", unb64(pubB64), RSA, false, ["encrypt"]);
+  return b64(await crypto.subtle.encrypt({ name: "RSA-OAEP" }, pub, ck));
+}
+async function wrapPriv(privKey, password) {
+  const salt = rand(16);
+  return { kdf: { salt: b64(salt), iter: CONFIG.iter }, priv: await seal(await pwKey(password, salt, CONFIG.iter), await crypto.subtle.exportKey("pkcs8", privKey)) };
+}
+async function openPriv(user, password) {   // rejects on a wrong password
+  const pkcs8 = await unseal(await pwKey(password, unb64(user.kdf.salt), user.kdf.iter), user.priv);
+  return crypto.subtle.importKey("pkcs8", pkcs8, RSA, true, ["decrypt"]);
+}
+async function openCk(user, privKey) { return new Uint8Array(await crypto.subtle.decrypt({ name: "RSA-OAEP" }, privKey, unb64(user.ck))); }
+async function makeUser(email, role, password, ck, by) {
+  const kp = await crypto.subtle.generateKey(RSA, true, ["encrypt", "decrypt"]);
+  const pub = b64(await crypto.subtle.exportKey("spki", kp.publicKey));
+  return Object.assign({ email: normEmail(email), role, mustChange: true }, await wrapPriv(kp.privateKey, password),
+    { pub, ck: await sealCk(pub, ck), updated: new Date().toISOString(), updatedBy: by });
+}
+async function encryptDashboard(ck, html) {
+  const iv = rand(12), ct = new Uint8Array(await crypto.subtle.encrypt({ name: "AES-GCM", iv }, await importCk(ck), te.encode(html)));
+  const out = new Uint8Array(12 + ct.length); out.set(iv); out.set(ct, 12); return out;
+}
+async function decryptDashboard(ck, bytes) {
+  return td.decode(await crypto.subtle.decrypt({ name: "AES-GCM", iv: bytes.slice(0, 12) }, await importCk(ck), bytes.slice(12)));
+}
+function tempPassword() {
+  const A = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789", r = rand(12);
+  const s = Array.from(r, x => A[x % A.length]).join("");
+  return s.slice(0, 4) + "-" + s.slice(4, 8) + "-" + s.slice(8);
+}
+function pwProblem(pw, email) {
+  const l = pw.toLowerCase(), local = normEmail(email).split("@")[0];
+  if (pw.length < 10) return "Use at least 10 characters.";
+  if (COMMON.includes(l) || /^\d+$/.test(pw) || /^(.)\1+$/.test(pw)) return "That password is too easy to guess. Pick another.";
+  if (local.length >= 4 && l.includes(local)) return "Don't include your email name in the password.";
+  return "";
+}
+
+/* One-time setup helper: builds the first users.json and dashboard.enc. Not used by the site itself. */
+window.SBFO_SETUP = async (html, users) => {
+  const ck = rand(32), doc = { version: 1, keyId: hex(rand(8)), token: null, users: [] };
+  for (const u of users) doc.users.push(await makeUser(u.email, u.role, u.password, ck, "setup"));
+  return { users: JSON.stringify(doc, null, 1), dashboard: b64(await encryptDashboard(ck, html)) };
+};
+
+/* ---------- reading and saving repo files ---------- */
+async function fetchRepoFile(path, asBytes) {
+  // The API returns a change immediately; the published site can lag by a minute or two, so it is the fallback.
+  const sources = [
+    () => fetch(API + "/contents/" + path + "?ref=" + CONFIG.branch, { headers: { Accept: "application/vnd.github.raw" }, cache: "no-store" }),
+    () => fetch(path + "?t=" + Date.now(), { cache: "no-store" })
+  ];
+  for (const get of sources) {
+    try { const r = await get(); if (r.ok) return asBytes ? new Uint8Array(await r.arrayBuffer()) : await r.text(); } catch (e) {}
+  }
+  throw new Error("offline");
+}
+async function gh(token, method, url, body) {
+  const headers = { Authorization: "Bearer " + token, Accept: "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28" };
+  if (body) headers["Content-Type"] = "application/json";
+  const r = await fetch(url.startsWith("http") ? url : API + url, { method, headers, body: body ? JSON.stringify(body) : undefined, cache: "no-store" });
+  if (!r.ok) {
+    const e = new Error(r.status === 401 ? "The saved GitHub token is invalid or has expired. The admin needs to add a new one under Admin → GitHub connection."
+      : r.status === 403 || r.status === 404 ? "The GitHub token can't write to the " + CONFIG.repo + " repository. It needs Contents: Read and write access."
+      : "GitHub returned an error (" + r.status + "). Try again in a minute.");
+    e.status = r.status; throw e;
+  }
+  return r.status === 204 ? null : r.json();
+}
+async function savedToken() {
+  if (!state.doc.token) throw new Error("GitHub isn't connected yet, so changes can't be saved. The admin needs to add a token under Admin → GitHub connection.");
+  return td.decode(await unseal(await importCk(state.ck), state.doc.token));
+}
+const usersFile = doc => ({ path: CONFIG.usersPath, bytes: te.encode(JSON.stringify(doc, null, 1) + "\n") });
+function checkKey(doc) {
+  if (doc.keyId !== state.doc.keyId) throw new Error("Access keys were changed in another window. Sign out, sign back in and try again.");
+}
+/* Reads the latest users.json at the branch head, lets `change` edit it and return the files to write,
+   then commits them together so users.json and dashboard.enc never get out of step. */
+async function commitChange(message, change, token) {
+  token = token || await savedToken();
+  for (let attempt = 0; attempt < 3; attempt++) {
+    const head = (await gh(token, "GET", "/git/ref/heads/" + CONFIG.branch)).object.sha;
+    const baseTree = (await gh(token, "GET", "/git/commits/" + head)).tree.sha;
+    const cur = await gh(token, "GET", "/contents/" + CONFIG.usersPath + "?ref=" + head);
+    const doc = JSON.parse(td.decode(unb64(cur.content.replace(/\s/g, ""))));
+    const files = await change(doc);
+    const tree = [];
+    for (const f of files) tree.push({ path: f.path, mode: "100644", type: "blob", sha: (await gh(token, "POST", "/git/blobs", { content: b64(f.bytes), encoding: "base64" })).sha });
+    const t = await gh(token, "POST", "/git/trees", { base_tree: baseTree, tree });
+    const c = await gh(token, "POST", "/git/commits", { message, tree: t.sha, parents: [head] });
+    try { await gh(token, "PATCH", "/git/refs/heads/" + CONFIG.branch, { sha: c.sha }); state.doc = doc; return doc; }
+    catch (e) { if (e.status !== 422 && e.status !== 409) throw e; }   // someone else saved first: start again from their version
+  }
+  throw new Error("Another change was being saved at the same moment. Please try again.");
+}
+
+/* ---------- session ---------- */
+const state = { doc: null, me: "", ck: null, html: "", priv: null, pub: "", blobUrl: "" };
+function stores() { const s = []; try { s.push(sessionStorage); } catch (e) {} try { s.push(localStorage); } catch (e) {} return s; }
+function readSession() {
+  for (const s of stores()) { try { const v = s.getItem(SESSION_KEY); if (v) return { data: JSON.parse(v), store: s }; } catch (e) {} }
+  return null;
+}
+function clearSession() { for (const s of stores()) { try { s.removeItem(SESSION_KEY); } catch (e) {} } }
+function saveSession(remember) {
+  clearSession();
+  try { (remember ? localStorage : sessionStorage).setItem(SESSION_KEY, JSON.stringify({ email: state.me, ck: b64(state.ck) })); } catch (e) {}
+}
+function refreshSessionKey() {
+  const s = readSession();
+  if (s) { try { s.store.setItem(SESSION_KEY, JSON.stringify({ email: state.me, ck: b64(state.ck) })); } catch (e) {} }
+}
+const findUser = (doc, email) => doc.users.find(u => u.email === normEmail(email));
+const me = () => findUser(state.doc, state.me);
+function signOut() { clearSession(); if (state.blobUrl) URL.revokeObjectURL(state.blobUrl); location.reload(); }
+
+/* ---------- screens ---------- */
+function screen(id) { for (const s of ["boot", "login", "setpw", "app"]) $(s).hidden = s !== id; }
+function applyTheme() { let t = null; try { t = localStorage.getItem("sbfo-theme"); } catch (e) {} document.documentElement.setAttribute("data-theme", t || "dark"); }
+window.addEventListener("storage", e => { if (e.key === "sbfo-theme") applyTheme(); });   // follow the dashboard's light/dark toggle
+
+function showLogin(email) {
+  screen("login");
+  if (email) { $("lEmail").value = email; $("lPw").focus(); } else $("lEmail").focus();
+}
+function enterApp() {
+  const u = me();
+  $("who").textContent = u.email;
+  $("cpUser").value = u.email;
+  $("adminBtn").hidden = u.role !== "admin";
+  showDashboard();
+  screen("app");
+}
+function showDashboard() {
+  if (state.blobUrl) URL.revokeObjectURL(state.blobUrl);
+  state.blobUrl = URL.createObjectURL(new Blob([state.html], { type: "text/html" }));
+  $("dash").src = state.blobUrl;
+}
+async function unlockFor(doc, user, ck) {
+  const html = await decryptDashboard(ck, await fetchRepoFile(CONFIG.dashPath, true));
+  Object.assign(state, { doc, me: user.email, ck, html, pub: user.pub });
+}
+
+(async function start() {
+  applyTheme();
+  if (!window.crypto || !crypto.subtle) { showLogin(); $("lMsg").textContent = "This browser can't open the dashboard. Use a current Chrome, Edge, Safari or Firefox."; return; }
+  const s = readSession();
+  if (s) {
+    try {
+      const doc = JSON.parse(await fetchRepoFile(CONFIG.usersPath)), u = findUser(doc, s.data.email);
+      // A removed user, a reset password or a replaced content key all end the saved session.
+      if (u && !(u.mustChange && doc.token)) { await unlockFor(doc, u, unb64(s.data.ck)); return enterApp(); }
+    } catch (e) {}
+    clearSession();
+  }
+  showLogin(s && s.data.email);
+})();
+
+let fails = 0;
+$("loginForm").onsubmit = async e => {
+  e.preventDefault();
+  const email = normEmail($("lEmail").value), pw = $("lPw").value, go = $("lGo"), msg = $("lMsg");
+  if (!email || !pw) { msg.textContent = "Enter your email and password."; return; }
+  go.disabled = true; go.textContent = "Signing in…"; msg.textContent = "";
+  let doc;
+  try { doc = JSON.parse(await fetchRepoFile(CONFIG.usersPath)); }
+  catch (err) { go.disabled = false; go.textContent = "Sign in"; msg.textContent = "Couldn't reach the site. Check your internet connection and try again."; return; }
+  try {
+    const u = findUser(doc, email);
+    if (!u) throw 0;
+    const priv = await openPriv(u, pw);
+    await unlockFor(doc, u, await openCk(u, priv));
+    saveSession($("lRem").checked);
+    $("lPw").value = "";
+    state.priv = priv;   // kept in memory only, so a starting password can be replaced once GitHub is connected
+    if (u.mustChange && doc.token) { screen("setpw"); $("spNew").focus(); return; }
+    return enterApp();
+  } catch (err) {}
+  fails++;
+  await new Promise(r => setTimeout(r, Math.min(1000 * fails, 8000)));   // slow down repeated guessing
+  go.disabled = false; go.textContent = "Sign in";
+  msg.textContent = "Incorrect email or password.";
+  $("lPw").value = ""; $("lPw").focus();
+  const c = $("loginCard"); c.classList.remove("shake"); void c.offsetWidth; c.classList.add("shake");
+};
+
+/* forced change after a starting or temporary password */
+$("spForm").onsubmit = async e => {
+  e.preventDefault();
+  const np = $("spNew").value, msg = $("spMsg"), go = $("spGo");
+  const bad = pwProblem(np, state.me) || (np !== $("spConf").value ? "The two passwords don't match." : "");
+  if (bad) { msg.textContent = bad; return; }
+  go.disabled = true; go.textContent = "Saving…"; msg.textContent = "";
+  try {
+    await commitChange("Password set by " + state.me, async doc => {
+      const u = findUser(doc, state.me);
+      if (!u || u.pub !== state.pub) throw new Error("Your account was changed by the admin. Sign out and sign in again.");
+      Object.assign(u, await wrapPriv(state.priv, np), { mustChange: false, updated: new Date().toISOString(), updatedBy: state.me });
+      return [usersFile(doc)];
+    });
+    enterApp();
+  } catch (err) { msg.textContent = err.message || "Couldn't save. Try again."; }
+  go.disabled = false; go.textContent = "Save and continue";
+};
+
+/* ---------- change password ---------- */
+$("acctBtn").onclick = () => {
+  for (const id of ["cpCur", "cpNew", "cpConf"]) $(id).value = "";
+  $("cpMsg").textContent = ""; $("cpMsg").className = "msg";
+  $("acct").showModal(); $("cpCur").focus();
+};
+$("cpForm").onsubmit = async e => {
+  e.preventDefault();
+  const cur = $("cpCur").value, np = $("cpNew").value, msg = $("cpMsg"), go = $("cpGo");
+  const bad = !cur ? "Enter your current password." : pwProblem(np, state.me) || (np !== $("cpConf").value ? "The two passwords don't match." : np === cur ? "The new password is the same as the current one." : "");
+  msg.className = "msg err";
+  if (bad) { msg.textContent = bad; return; }
+  go.disabled = true; go.textContent = "Saving…"; msg.textContent = "";
+  try {
+    await commitChange("Password changed by " + state.me, async doc => {
+      const u = findUser(doc, state.me);
+      if (!u) throw new Error("Your account no longer exists.");
+      let priv;
+      try { priv = await openPriv(u, cur); } catch (x) { throw new Error("Your current password is incorrect."); }
+      Object.assign(u, await wrapPriv(priv, np), { mustChange: false, updated: new Date().toISOString(), updatedBy: state.me });
+      return [usersFile(doc)];
+    });
+    msg.className = "msg ok"; msg.textContent = "Password changed. Use the new one next time you sign in.";
+    for (const id of ["cpCur", "cpNew", "cpConf"]) $(id).value = "";
+  } catch (err) { msg.textContent = err.message || "Couldn't save. Try again."; }
+  go.disabled = false; go.textContent = "Change password";
+};
+
+/* ---------- admin ---------- */
+function admMsg(text, ok) { const m = $("admMsg"); m.className = "msg " + (ok ? "ok" : "err"); m.textContent = text || ""; }
+function showTemp(email, pw, what) {
+  $("admResult").innerHTML = '<div class="result">' + esc(what) + ' Temporary password for <b>' + esc(email) + '</b>:<code>' + esc(pw) +
+    '</code><button class="btn" type="button" id="copyTemp">Copy</button><div class="note" style="margin-top:6px">Share it privately. They\'ll choose their own password when they sign in. This is the only time it\'s shown.</div></div>';
+  $("copyTemp").onclick = () => navigator.clipboard && navigator.clipboard.writeText(pw).then(() => { $("copyTemp").textContent = "Copied"; });
+}
+function renderAdmin() {
+  const d = state.doc;
+  const rows = d.users.map(u => {
+    const self = u.email === state.me, e = esc(u.email);
+    return '<tr><td>' + e + (self ? '<span class="tag">you</span>' : '') + '</td><td>' + (u.role === "admin" ? "Admin" : "Viewer") + '</td>' +
+      '<td>' + (u.mustChange ? '<span class="warn">Must set password</span>' : 'Active') + '</td><td class="act"><div class="acts">' +
+      (self ? '<span class="note">Use “Change password”</span>' :
+        '<button class="btn" data-a="reset" data-e="' + e + '">Reset password</button>' +
+        '<button class="btn" data-a="role" data-e="' + e + '">' + (u.role === "admin" ? "Make viewer" : "Make admin") + '</button>' +
+        '<button class="btn danger" data-a="remove" data-e="' + e + '">Remove</button>') + '</div></td></tr>';
+  }).join("");
+  $("admBody").innerHTML =
+    '<section class="blk"><h3>People with access</h3>' +
+    '<div class="tbl-wrap"><table><thead><tr><th>Email</th><th>Role</th><th>Status</th><th>Actions</th></tr></thead><tbody>' + rows + '</tbody></table></div>' +
+    '<form id="addForm" class="row" novalidate>' +
+      '<div class="field"><label class="lbl" for="aEmail">Add email</label><input id="aEmail" type="email" autocapitalize="none" spellcheck="false" placeholder="name@alcoverealty.in"></div>' +
+      '<div class="field"><label class="lbl" for="aRole">Role</label><select id="aRole"><option value="viewer">Viewer</option><option value="admin">Admin</option></select></div>' +
+      '<div class="field"><label class="lbl" for="aPw">Temporary password</label><input id="aPw" type="text" spellcheck="false" autocomplete="off"></div>' +
+      '<button class="btn primary" type="submit">Add</button></form>' +
+    '<p class="note">Admins can open this page. Viewers can only see the dashboard and change their own password.</p></section>' +
+
+    '<section class="blk"><h3>Update the dashboard</h3><p class="note" style="margin:0">Choose the unprotected dashboard file from your computer (Saurabh_Baid_Family_Office_Dashboard.html). It is encrypted in this browser and then published.</p>' +
+    '<div class="inline"><input type="file" id="dFile" accept=".html,.htm,text/html"><button class="btn primary" type="button" id="dGo">Encrypt and publish</button></div></section>' +
+
+    '<section class="blk"><h3>GitHub connection</h3><p class="note" style="margin:0">' +
+    (d.token ? 'Connected. Password changes and admin changes are saved to the <b>' + esc(CONFIG.repo) + '</b> repository.'
+      : '<span class="warn">Not connected.</span> Until a token is added, nobody can change passwords and admin changes can\'t be saved.') + '</p>' +
+    '<ol class="steps"><li>Open <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">GitHub → New fine-grained token</a>.</li>' +
+    '<li>Repository access: <b>Only select repositories</b> → ' + esc(CONFIG.repo) + '. Permissions → Repository → <b>Contents: Read and write</b>.</li>' +
+    '<li>Generate the token, paste it here and save. It is stored encrypted; only signed-in users can unlock it.</li></ol>' +
+    '<div class="inline"><input type="password" id="tok" autocomplete="off" placeholder="github_pat_…"><button class="btn primary" type="button" id="tokGo">' + (d.token ? "Replace token" : "Save token") + '</button></div></section>';
+
+  $("aPw").value = tempPassword();
+  $("addForm").onsubmit = ev => { ev.preventDefault(); addUser(); };
+  $("dGo").onclick = publishDashboard;
+  $("tokGo").onclick = saveToken;
+  for (const b of $("admBody").querySelectorAll("button[data-a]")) b.onclick = () => userAction(b.dataset.a, b.dataset.e, b);
+}
+$("adminBtn").onclick = () => { $("admResult").innerHTML = ""; admMsg(""); renderAdmin(); $("admin").showModal(); };
+
+async function run(btn, label, fn) {
+  const old = btn.textContent; btn.disabled = true; btn.textContent = label; admMsg("");
+  try { await fn(); } catch (err) { admMsg(err.message || "Something went wrong. Try again."); }
+  btn.disabled = false; btn.textContent = old;
+}
+function addUser() {
+  const email = normEmail($("aEmail").value), role = $("aRole").value, pw = $("aPw").value.trim(), btn = $("addForm").querySelector("button");
+  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return admMsg("Enter a valid email address.");
+  const bad = pwProblem(pw, email); if (bad) return admMsg("Temporary password: " + bad);
+  run(btn, "Adding…", async () => {
+    await commitChange("Add user " + email, async doc => {
+      checkKey(doc);
+      if (findUser(doc, email)) throw new Error(email + " already has access.");
+      doc.users.push(await makeUser(email, role, pw, state.ck, state.me));
+      return [usersFile(doc)];
+    });
+    renderAdmin(); showTemp(email, pw, "Added.");
+  });
+}
+function userAction(action, email, btn) {
+  if (action === "reset") {
+    const pw = tempPassword();
+    return run(btn, "Resetting…", async () => {
+      await commitChange("Reset password for " + email, async doc => {
+        checkKey(doc);
+        const i = doc.users.findIndex(u => u.email === email);
+        if (i < 0) throw new Error(email + " no longer has access.");
+        doc.users[i] = await makeUser(email, doc.users[i].role, pw, state.ck, state.me);
+        return [usersFile(doc)];
+      });
+      renderAdmin(); showTemp(email, pw, "Password reset.");
+    });
+  }
+  if (action === "role") {
+    return run(btn, "Saving…", async () => {
+      await commitChange("Change role of " + email, async doc => {
+        const u = findUser(doc, email);
+        if (!u) throw new Error(email + " no longer has access.");
+        u.role = u.role === "admin" ? "viewer" : "admin";
+        Object.assign(u, { updated: new Date().toISOString(), updatedBy: state.me });
+        return [usersFile(doc)];
+      });
+      renderAdmin(); admMsg("Role updated.", true);
+    });
+  }
+  if (action === "remove") {
+    if (!confirm("Remove " + email + "? They will lose access immediately and the dashboard will be re-locked with a new key for everyone else.")) return;
+    return run(btn, "Removing…", async () => {
+      let ck2;
+      await commitChange("Remove user " + email, async doc => {
+        checkKey(doc);
+        doc.users = doc.users.filter(u => u.email !== email);
+        if (!doc.users.some(u => u.role === "admin")) throw new Error("At least one admin must remain.");
+        // New content key, so a copy of the old key kept by the removed user opens nothing new.
+        ck2 = rand(32);
+        for (const u of doc.users) u.ck = await sealCk(u.pub, ck2);
+        if (doc.token) doc.token = await seal(await importCk(ck2), await unseal(await importCk(state.ck), doc.token));
+        doc.keyId = hex(rand(8));
+        return [usersFile(doc), { path: CONFIG.dashPath, bytes: await encryptDashboard(ck2, state.html) }];
+      });
+      state.ck = ck2; refreshSessionKey();
+      renderAdmin();
+      admMsg(email + " removed. They could have seen the GitHub token while they had access, so create a new token and use “Replace token” below, then delete the old one on GitHub.", true);
+    });
+  }
+}
+function publishDashboard() {
+  const f = $("dFile").files[0], btn = $("dGo");
+  if (!f) return admMsg("Choose the dashboard .html file first.");
+  run(btn, "Publishing…", async () => {
+    const html = await f.text();
+    if (!/<html[\s>]/i.test(html) || html.includes("SBFO_SETUP") || html.includes("sbfo_key_")) throw new Error("That doesn't look like the unprotected dashboard file.");
+    await commitChange("Update dashboard", async doc => { checkKey(doc); return [{ path: CONFIG.dashPath, bytes: await encryptDashboard(state.ck, html) }]; });
+    state.html = html; showDashboard();
+    admMsg("Dashboard published. Everyone sees the new version the next time they sign in or reload.", true);
+  });
+}
+function saveToken() {
+  const tok = $("tok").value.trim(), btn = $("tokGo");
+  if (!tok) return admMsg("Paste the GitHub token first.");
+  run(btn, "Checking…", async () => {
+    const repo = await gh(tok, "GET", "");
+    if (repo.permissions && !repo.permissions.push) throw new Error("That token can't write to " + CONFIG.repo + ". Give it Contents: Read and write.");
+    await commitChange("Update GitHub token", async doc => { checkKey(doc); doc.token = await seal(await importCk(state.ck), te.encode(tok)); return [usersFile(doc)]; }, tok);
+    $("tok").value = "";
+    if (me().mustChange && state.priv) {   // the admin is still on a starting password: replace it now
+      $("admin").close(); screen("setpw"); $("spNew").focus();
+      return;
+    }
+    renderAdmin(); admMsg("GitHub connected. Changes will now be saved.", true);
+  });
+}
+
+for (const b of document.querySelectorAll("[data-signout]")) b.onclick = signOut;
+for (const b of document.querySelectorAll("[data-close]")) b.onclick = () => b.closest("dialog").close();
+</script>
+</body>
+</html>
