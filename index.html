@@ -212,6 +212,8 @@ a{color:var(--accent)}
 
 <script>
 "use strict";
+// Hosted under a sub-path (e.g. /p/name): make sure the address ends in "/" so data/ resolves inside it.
+if (location.protocol !== "file:" && !/\/$|\.html?$/i.test(location.pathname)) location.replace(location.pathname + "/" + location.search);
 /* Repository that hosts this site. On github.io it is read from the address; the values below are only a fallback. */
 const CONFIG = (() => {
   const c = { owner: "suryaagarwal1997", repo: "SB-Family-Office-Portal", branch: "main" };
