@@ -5,6 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex,nofollow">
 <title>SB Family Office</title>
+<!-- installable app (iPhone: Add to Home Screen; Android: Install app) -->
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#0C231C">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Family Office">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
@@ -34,7 +43,7 @@ body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 "IBM Plex Sans
 button{font:inherit;color:inherit}
 
 /* sign-in screens */
-.center{min-height:100%;display:flex;align-items:center;justify-content:center;padding:24px 16px}
+.center{min-height:100%;display:flex;align-items:center;justify-content:center;padding:max(24px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) max(24px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left))}
 .card{width:100%;max-width:400px;background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:34px 28px 26px}
 .mark{width:44px;height:44px;border-radius:50%;border:1.5px solid var(--accent);display:grid;place-items:center;color:var(--accent);
   font:600 17px/1 "Playfair Display",Georgia,serif;letter-spacing:.5px;margin-bottom:18px;flex:none}
@@ -75,6 +84,11 @@ input:focus,select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 
 .bar .btn{padding:6px 11px;font-size:13px}
 #dash{flex:1;width:100%;border:0;display:block;background:var(--bg)}
 @media (max-width:560px){.bar .name,.bar .who{display:none}.bar nav{margin-left:auto}}
+/* phone view: the dashboard's own mobile app fills the screen and has its own navigation */
+html.mobile.app-on,html.mobile.app-on body{height:100%;overflow:hidden;overscroll-behavior:none}
+html.mobile .bar{display:none}
+html.mobile #dash{position:fixed;inset:0;width:100%;height:100%}
+#safearea{position:fixed;inset:0;visibility:hidden;pointer-events:none;padding:env(safe-area-inset-top,0px) env(safe-area-inset-right,0px) env(safe-area-inset-bottom,0px) env(safe-area-inset-left,0px)}
 
 /* dialogs */
 dialog{border:1px solid var(--line);border-radius:16px;background:var(--surface);color:var(--ink);box-shadow:var(--shadow);padding:0;width:min(440px,calc(100vw - 32px));max-height:calc(100dvh - 32px)}
@@ -169,6 +183,7 @@ a{color:var(--accent)}
     <span class="name">Family Office</span>
     <span class="who" id="who"></span>
     <nav>
+      <button class="btn" id="mobileBtn" type="button" hidden>Mobile app</button>
       <button class="btn" id="adminBtn" type="button" hidden>Admin</button>
       <button class="btn" id="acctBtn" type="button">Change password</button>
       <button class="btn" type="button" data-signout>Sign out</button>
@@ -176,6 +191,7 @@ a{color:var(--accent)}
   </header>
   <iframe id="dash" title="Portfolio dashboard"></iframe>
 </div>
+<div id="safearea" aria-hidden="true"></div>
 
 <dialog id="acct" aria-labelledby="acctTitle">
   <div class="dlg">
@@ -213,7 +229,17 @@ a{color:var(--accent)}
 <script>
 "use strict";
 // Hosted under a sub-path (e.g. /p/name): make sure the address ends in "/" so data/ resolves inside it.
-if (location.protocol !== "file:" && !/\/$|\.html?$/i.test(location.pathname)) location.replace(location.pathname + "/" + location.search);
+if (location.protocol !== "file:" && !/\/$|\.html?$/i.test(location.pathname)) location.replace(location.pathname + "/" + location.search + location.hash);
+
+/* Phones get the dashboard's mobile app; tablets and computers get the full dashboard.
+   ?view=mobile or ?view=desktop (or the in-app switch) overrides this for the current session. */
+const IS_PHONE = Math.min(screen.width, screen.height) < 600;
+const VIEW = (() => {
+  let v = new URLSearchParams(location.search).get("view");
+  try { if (v) sessionStorage.setItem("sbfo-view", v); else v = sessionStorage.getItem("sbfo-view"); } catch (e) {}
+  return v === "mobile" || v === "desktop" ? v : IS_PHONE ? "mobile" : "desktop";
+})();
+if (VIEW === "mobile") document.documentElement.classList.add("mobile");
 /* Repository that hosts this site. On github.io it is read from the address; the values below are only a fallback. */
 const CONFIG = (() => {
   const c = { owner: "suryaagarwal1997", repo: "SB-Family-Office-Portal", branch: "main" };
@@ -363,15 +389,60 @@ function refreshSessionKey() {
 }
 const findUser = (doc, email) => doc.users.find(u => u.email === normEmail(email));
 const me = () => findUser(state.doc, state.me);
-function signOut() { clearSession(); if (state.blobUrl) URL.revokeObjectURL(state.blobUrl); location.reload(); }
+// Absolute addresses: these can be called from the dashboard frame, where a relative one would resolve against the frame's blob: address.
+function signOut() { clearSession(); if (state.blobUrl) URL.revokeObjectURL(state.blobUrl); location.replace(location.href.split("#")[0]); }
 
 /* ---------- screens ---------- */
-function screen(id) { for (const s of ["boot", "login", "setpw", "app"]) $(s).hidden = s !== id; }
-function applyTheme() { let t = null; try { t = localStorage.getItem("sbfo-theme"); } catch (e) {} document.documentElement.setAttribute("data-theme", t || "dark"); }
+function showScreen(id) {
+  for (const s of ["boot", "login", "setpw", "app"]) $(s).hidden = s !== id;
+  document.documentElement.classList.toggle("app-on", id === "app");   // sign-in screens keep normal page scrolling (keyboard open on small phones)
+}
+function applyTheme() {
+  let t = null; try { t = localStorage.getItem("sbfo-theme"); } catch (e) {}
+  document.documentElement.setAttribute("data-theme", t || "dark");
+  document.querySelector('meta[name="theme-color"]').content = t === "light" ? "#F5EFE3" : "#0C231C";
+}
 window.addEventListener("storage", e => { if (e.key === "sbfo-theme") applyTheme(); });   // follow the dashboard's light/dark toggle
 
+/* The frame doesn't receive the phone's screen insets (notch, home indicator, gesture bar), so pass them in. */
+function passInsets() {
+  try {
+    const cs = getComputedStyle($("safearea")), root = $("dash").contentDocument.documentElement;
+    [["--sat", "paddingTop"], ["--sar", "paddingRight"], ["--sab", "paddingBottom"], ["--sal", "paddingLeft"]].forEach(([v, p]) => root.style.setProperty(v, cs[p]));
+  } catch (e) {}
+}
+$("dash").addEventListener("load", passInsets);
+window.addEventListener("resize", () => setTimeout(passInsets, 60));
+window.addEventListener("orientationchange", () => setTimeout(passInsets, 300));
+
+/* What the dashboard's mobile app can ask of the shell. */
+let installPrompt = null;
+window.addEventListener("beforeinstallprompt", e => { e.preventDefault(); installPrompt = e; });
+window.SBFO_SHELL = {
+  mobile: VIEW === "mobile",
+  get email() { return state.me; },
+  get role() { const u = state.doc && me(); return u ? u.role : ""; },
+  openPassword: () => $("acctBtn").click(),
+  openAdmin: () => { const u = me(); if (u && u.role === "admin") $("adminBtn").click(); },
+  signOut,
+  applyTheme,
+  setView(v) {
+    try { sessionStorage.setItem("sbfo-view", v); } catch (e) {}
+    const u = new URL(location.href); u.searchParams.delete("view"); if (v !== "mobile") u.hash = "";
+    location.replace(u.href);
+  },
+  standalone: () => matchMedia("(display-mode: standalone)").matches || navigator.standalone === true,
+  canInstall: () => !!installPrompt,
+  install: async () => { if (!installPrompt) return; installPrompt.prompt(); try { await installPrompt.userChoice; } catch (e) {} installPrompt = null; }
+};
+$("mobileBtn").hidden = !(IS_PHONE && VIEW === "desktop");
+$("mobileBtn").onclick = () => SBFO_SHELL.setView("mobile");
+
+/* Caches only the public sign-in page and icons; the encrypted data and the sheet always come from the network. */
+if ("serviceWorker" in navigator && location.protocol === "https:") navigator.serviceWorker.register("sw.js").catch(() => {});
+
 function showLogin(email) {
-  screen("login");
+  showScreen("login");
   if (email) { $("lEmail").value = email; $("lPw").focus(); } else $("lEmail").focus();
 }
 function enterApp() {
@@ -380,7 +451,7 @@ function enterApp() {
   $("cpUser").value = u.email;
   $("adminBtn").hidden = u.role !== "admin";
   showDashboard();
-  screen("app");
+  showScreen("app");
 }
 function showDashboard() {
   if (state.blobUrl) URL.revokeObjectURL(state.blobUrl);
@@ -424,7 +495,7 @@ $("loginForm").onsubmit = async e => {
     saveSession($("lRem").checked);
     $("lPw").value = "";
     state.priv = priv;   // kept in memory only, so a starting password can be replaced once GitHub is connected
-    if (u.mustChange && doc.token) { screen("setpw"); $("spNew").focus(); return; }
+    if (u.mustChange && doc.token) { showScreen("setpw"); $("spNew").focus(); return; }
     return enterApp();
   } catch (err) {}
   fails++;
@@ -615,7 +686,7 @@ function saveToken() {
     await commitChange("Update GitHub token", async doc => { checkKey(doc); doc.token = await seal(await importCk(state.ck), te.encode(tok)); return [usersFile(doc)]; }, tok);
     $("tok").value = "";
     if (me().mustChange && state.priv) {   // the admin is still on a starting password: replace it now
-      $("admin").close(); screen("setpw"); $("spNew").focus();
+      $("admin").close(); showScreen("setpw"); $("spNew").focus();
       return;
     }
     renderAdmin(); admMsg("GitHub connected. Changes will now be saved.", true);
