@@ -2,7 +2,7 @@
    Stores only the public sign-in page, the manifest and the icons, so the app opens quickly and can show
    a clear "you're offline" message. It never stores the encrypted dashboard or user list (data/), the
    GitHub API, the Google Sheet connector or anything else that carries portfolio information. */
-const CACHE = "sbfo-shell-v1";
+const CACHE = "sbfo-shell-v2";
 const SHELL = ["./", "manifest.webmanifest", "icons/icon-192.png", "icons/icon-512.png", "icons/apple-touch-icon.png", "icons/favicon-32.png"];
 
 self.addEventListener("install", e => {
