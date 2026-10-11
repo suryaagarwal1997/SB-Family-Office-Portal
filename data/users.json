@@ -130,10 +130,9 @@
    },
    "pub": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA3KWqXWAneokJ5pi6FqIli3YFauoHtJWJwUzrNpbAjSkU5OnKTT2kUr2NQphmVs8AaOKk4dA0ud1e/MGk27jI/pp1ZYfHg8HRiLAGkjEn8YOZF6IWgzm26KSc+BLPbOiyNKWep7LCeZRhedxJOcff4POdB5Cg6MWV2k2hO26OW5pK/KFCoJq8at7k98rc2u9/WBHokqAnT5TW//hMn++HLuQAkKnZyjylN2G4wh34c5/jf446Ph2vaMutdc9+BYSJPAHJTxMYadwxIywmEmPEPiFkFzJzoP/FFvXjBYdhhUzrHl4fqMDpkYcxkgbC7SxVYMDi1s2DCJigyWjvNwpVywIDAQAB",
    "ck": "JWyXGhnCPCNKMfZrwIdK0RQis4b23iTwpt8yqHSU1KFJR0kTqYu8NVEASLkBA+j9dmG1eHG/GGOJC4h2c4l8K0RBySW6jXog+lPPCeQtoPQKJkWN8CDcGCX5QfUM2cpD8DZeCh3Fy8LjW22jmqeqNzbnRXH22/Z73AHoH3PggJTUMCOwmqNvS3+GJj40ZsdnGytpvVd6XAnO8PUtf8OXQwMNOSZwwgyXam5MNeZotMisOtCwTcgPYsqmlHg8++ZHK//Lk2CG9lVc+bp5/8NUlcw6i9UskTvP6vM5bxMeALo2mKqYRGhAzG0JdAIkwe/91WEElH2V4x5UUT5L52c8hQ==",
-   "updated": "2026-10-11T14:49:52.548Z",
+   "updated": "2026-10-11T14:50:00.454Z",
    "updatedBy": "surya.agarwal@alcoverealty.in",
    "access": [
-    "cards",
     "resources",
     "sources"
    ]
