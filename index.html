@@ -418,7 +418,7 @@ function refreshSessionKey() {
 const ROLES = { admin: "Admin", management: "Management", ea: "Executive Assistant", employee: "Employee" };
 const roleOf = u => !u ? "" : ROLES[u.role] ? u.role : "management";
 const SECTIONS = { finance: "Financial data", cards: "Credit cards", resources: "Resources", sources: "Data sources" };
-const RIGHTS = { raise: "Debit note contributor", submit: "Invoices attached & debit note submitted", committed: "Committed payment dates", paid: "Payment received" };
+const RIGHTS = { raise: "Debit note contributor", submit: "Invoices attached & debit note submitted", committed: "Committed payment dates", paid: "Payment received", pay: "Credit card payments" };
 const DEFAULTS = {
   admin: { access: Object.keys(SECTIONS), rights: Object.keys(RIGHTS) },
   management: { access: Object.keys(SECTIONS), rights: [] },
@@ -647,7 +647,7 @@ function renderAdmin() {
       '<button class="btn primary" type="submit">Add</button></form>' +
     '<p class="note">A role sets what a person starts with; tick or untick anything per person, and changing a role resets their ticks to that role\'s defaults. ' +
     '<b>Admin</b>: everything, including this page. <b>Management</b>: all sections, no debit-note rights. <b>Executive Assistant</b>: Credit cards and Resources; records invoices attached &amp; debit note submitted, and committed payment dates. <b>Employee</b>: all sections, no debit-note rights.</p>' +
-    '<p class="note"><b>Debit note contributor</b> raises debit notes and resolves reconciliation. The other rights are the steps after it (invoices attached &amp; submitted, committed payment date, payment received), so different people can record them.</p></section>' +
+    '<p class="note"><b>Debit note contributor</b> raises debit notes and resolves reconciliation. The other rights are the steps after it (invoices attached &amp; submitted, committed payment date, payment received), so different people can record them. <b>Credit card payments</b> records what was paid to the bank on each card statement, in full or in part.</p></section>' +
 
     '<section class="blk"><h3>Update the dashboard</h3><p class="note" style="margin:0">Choose the unprotected dashboard file from your computer (Saurabh_Baid_Family_Office_Dashboard.html). It is encrypted in this browser and then published.</p>' +
     '<div class="inline"><input type="file" id="dFile" accept=".html,.htm,text/html"><button class="btn primary" type="button" id="dGo">Encrypt and publish</button></div></section>' +
