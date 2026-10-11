@@ -418,16 +418,18 @@ function refreshSessionKey() {
 const ROLES = { admin: "Admin", management: "Management", ea: "Executive Assistant", employee: "Employee" };
 const roleOf = u => !u ? "" : ROLES[u.role] ? u.role : "management";
 const SECTIONS = { finance: "Financial data", cards: "Credit cards", resources: "Resources", sources: "Data sources" };
-const RIGHTS = { raise: "Debit note contributor", invoices: "Invoices attached", submit: "Mark submitted", committed: "Committed payment dates", paid: "Payment received" };
+const RIGHTS = { raise: "Debit note contributor", submit: "Invoices attached & debit note submitted", committed: "Committed payment dates", paid: "Payment received" };
 const DEFAULTS = {
   admin: { access: Object.keys(SECTIONS), rights: Object.keys(RIGHTS) },
   management: { access: Object.keys(SECTIONS), rights: [] },
-  ea: { access: ["cards", "resources"], rights: ["invoices", "submit", "committed"] },
+  ea: { access: ["cards", "resources"], rights: ["submit", "committed"] },
   employee: { access: Object.keys(SECTIONS), rights: [] }
 };
 const accessOf = u => !u ? [] : roleOf(u) === "admin" ? DEFAULTS.admin.access : (u.access || DEFAULTS[roleOf(u)].access).filter(k => SECTIONS[k]);
 // "dn" was the earlier single "can raise debit notes" switch; it now means Debit note contributor.
-const rightsOf = u => !u ? [] : roleOf(u) === "admin" ? DEFAULTS.admin.rights : (u.rights || DEFAULTS[roleOf(u)].rights.concat(u.dn ? ["raise"] : [])).filter(k => RIGHTS[k]);
+// "invoices" was a separate right before it was merged into "submit".
+const rightsOf = u => !u ? [] : roleOf(u) === "admin" ? DEFAULTS.admin.rights :
+  [...new Set((u.rights || DEFAULTS[roleOf(u)].rights.concat(u.dn ? ["raise"] : [])).map(k => k === "invoices" ? "submit" : k))].filter(k => RIGHTS[k]);
 const findUser = (doc, email) => doc.users.find(u => u.email === normEmail(email));
 const me = () => findUser(state.doc, state.me);
 // Absolute addresses: these can be called from the dashboard frame, where a relative one would resolve against the frame's blob: address.
@@ -644,8 +646,8 @@ function renderAdmin() {
       '<div class="field"><label class="lbl" for="aPw">Temporary password</label><input id="aPw" type="text" spellcheck="false" autocomplete="off"></div>' +
       '<button class="btn primary" type="submit">Add</button></form>' +
     '<p class="note">A role sets what a person starts with; tick or untick anything per person, and changing a role resets their ticks to that role\'s defaults. ' +
-    '<b>Admin</b>: everything, including this page. <b>Management</b>: all sections, no debit-note rights. <b>Executive Assistant</b>: Credit cards and Resources; records invoices attached, submissions and committed payment dates. <b>Employee</b>: all sections, no debit-note rights.</p>' +
-    '<p class="note"><b>Debit note contributor</b> raises debit notes and resolves reconciliation. The other rights are each one step after it, so different people can record them.</p></section>' +
+    '<b>Admin</b>: everything, including this page. <b>Management</b>: all sections, no debit-note rights. <b>Executive Assistant</b>: Credit cards and Resources; records invoices attached &amp; debit note submitted, and committed payment dates. <b>Employee</b>: all sections, no debit-note rights.</p>' +
+    '<p class="note"><b>Debit note contributor</b> raises debit notes and resolves reconciliation. The other rights are the steps after it (invoices attached &amp; submitted, committed payment date, payment received), so different people can record them.</p></section>' +
 
     '<section class="blk"><h3>Update the dashboard</h3><p class="note" style="margin:0">Choose the unprotected dashboard file from your computer (Saurabh_Baid_Family_Office_Dashboard.html). It is encrypted in this browser and then published.</p>' +
     '<div class="inline"><input type="file" id="dFile" accept=".html,.htm,text/html"><button class="btn primary" type="button" id="dGo">Encrypt and publish</button></div></section>' +
