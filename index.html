@@ -82,6 +82,8 @@ input:focus,select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 
 .bar .name{font:600 16px/1.2 "Playfair Display",Georgia,serif}
 .dnsw{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);cursor:pointer;white-space:nowrap}
 .dnsw input{accent-color:var(--accent);width:16px;height:16px;margin:0}
+.perms{display:grid;gap:4px}.perms .dnsw{font-size:12.5px}
+.perms.all{font-size:12.5px;color:var(--muted)}
 select.rolesel{width:auto;min-width:130px;padding:6px 10px;font-size:14px}
 @media (max-width:640px){select.rolesel{font-size:16px}}
 .bar .rolechip{flex:none;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);padding:4px 10px;border-radius:999px;border:1px solid color-mix(in srgb,var(--accent) 45%,transparent);background:color-mix(in srgb,var(--accent) 12%,transparent)}
@@ -411,9 +413,21 @@ function refreshSessionKey() {
   const s = readSession();
   if (s) { try { s.store.setItem(SESSION_KEY, JSON.stringify({ email: state.me, ck: b64(state.ck) })); } catch (e) {} }
 }
-/* Roles: admin (everything, plus the Admin panel), management (views all data), employee (views data; data entry comes later). */
-const ROLES = { admin: "Admin", management: "Management", employee: "Employee" };
+/* Roles set what a person starts with; Admin can then tick each section and each debit-note right per person.
+   Admin always has everything. These choices shape what the dashboard shows; they are not a security boundary. */
+const ROLES = { admin: "Admin", management: "Management", ea: "Executive Assistant", employee: "Employee" };
 const roleOf = u => !u ? "" : ROLES[u.role] ? u.role : "management";
+const SECTIONS = { finance: "Financial data", cards: "Credit cards", resources: "Resources", sources: "Data sources" };
+const RIGHTS = { raise: "Debit note contributor", invoices: "Invoices attached", submit: "Mark submitted", committed: "Committed payment dates", paid: "Payment received" };
+const DEFAULTS = {
+  admin: { access: Object.keys(SECTIONS), rights: Object.keys(RIGHTS) },
+  management: { access: Object.keys(SECTIONS), rights: [] },
+  ea: { access: ["cards", "resources"], rights: ["invoices", "submit", "committed"] },
+  employee: { access: Object.keys(SECTIONS), rights: [] }
+};
+const accessOf = u => !u ? [] : roleOf(u) === "admin" ? DEFAULTS.admin.access : (u.access || DEFAULTS[roleOf(u)].access).filter(k => SECTIONS[k]);
+// "dn" was the earlier single "can raise debit notes" switch; it now means Debit note contributor.
+const rightsOf = u => !u ? [] : roleOf(u) === "admin" ? DEFAULTS.admin.rights : (u.rights || DEFAULTS[roleOf(u)].rights.concat(u.dn ? ["raise"] : [])).filter(k => RIGHTS[k]);
 const findUser = (doc, email) => doc.users.find(u => u.email === normEmail(email));
 const me = () => findUser(state.doc, state.me);
 // Absolute addresses: these can be called from the dashboard frame, where a relative one would resolve against the frame's blob: address.
@@ -443,8 +457,9 @@ $("dash").addEventListener("load", passInsets);
 // Section links open the dashboard's own panels; each shows once the loaded dashboard offers it (desktop view only).
 $("dash").addEventListener("load", () => {
   let any = false;
+  const need = { SBFO_openCards: "cards", SBFO_openResources: "resources", SBFO_openSources: "sources" }, mine = state.doc ? accessOf(me()) : [];
   for (const b of $("mods").querySelectorAll("[data-open]")) {
-    let ok = false; try { ok = typeof $("dash").contentWindow[b.dataset.open] === "function"; } catch (e) {}
+    let ok = false; try { ok = typeof $("dash").contentWindow[b.dataset.open] === "function" && mine.includes(need[b.dataset.open]); } catch (e) {}
     b.hidden = !ok; any = any || ok;
   }
   $("mods").hidden = !any || VIEW === "mobile";
@@ -461,7 +476,9 @@ window.SBFO_SHELL = {
   get email() { return state.me; },
   get role() { return state.doc ? roleOf(me()) : ""; },
   get roleLabel() { return state.doc ? ROLES[roleOf(me())] : ""; },
-  get canRaise() { const u = state.doc && me(); return !!(u && u.dn); },   // may raise debit notes and record payments (set per person by Admin)
+  get access() { return state.doc ? accessOf(me()).slice() : []; },   // sections this person may open (set by Admin)
+  get rights() { return state.doc ? rightsOf(me()).slice() : []; },   // debit-note steps this person may record (set by Admin)
+  get canRaise() { return state.doc ? rightsOf(me()).includes("raise") : false; },
   setBadge(fn, count) {
     const b = $("mods").querySelector('[data-open="' + fn + '"]'); if (!b) return;
     let s = b.querySelector(".badge"); if (!count) { if (s) s.remove(); return; }
@@ -611,7 +628,7 @@ function renderAdmin() {
   const d = state.doc;
   const rows = d.users.map(u => {
     const self = u.email === state.me, e = esc(u.email);
-    return '<tr><td>' + e + (self ? '<span class="tag">you</span>' : '') + '</td><td>' + (self ? ROLES[roleOf(u)] : '<select class="rolesel" data-e="' + e + '" aria-label="Role for ' + e + '">' + Object.keys(ROLES).map(r => '<option value="' + r + '"' + (roleOf(u) === r ? " selected" : "") + ">" + ROLES[r] + "</option>").join("") + "</select>") + '</td><td><label class="dnsw"><input type="checkbox" class="dnchk" data-e="' + e + '"' + (u.dn ? " checked" : "") + '> <span>Can raise</span></label></td>' +
+    return '<tr><td>' + e + (self ? '<span class="tag">you</span>' : '') + '</td><td>' + (self ? ROLES[roleOf(u)] : '<select class="rolesel" data-e="' + e + '" aria-label="Role for ' + e + '">' + Object.keys(ROLES).map(r => '<option value="' + r + '"' + (roleOf(u) === r ? " selected" : "") + ">" + ROLES[r] + "</option>").join("") + "</select>") + "</td>" + permCell(u, "access", SECTIONS, accessOf(u)) + permCell(u, "rights", RIGHTS, rightsOf(u)) +
       '<td>' + (u.mustChange ? '<span class="warn">Must set password</span>' : 'Active') + '</td><td class="act"><div class="acts">' +
       (self ? '<span class="note">Use “Change password”</span>' :
         '<button class="btn" data-a="reset" data-e="' + e + '">Reset password</button>' +
@@ -620,13 +637,15 @@ function renderAdmin() {
   }).join("");
   $("admBody").innerHTML =
     '<section class="blk"><h3>People with access</h3>' +
-    '<div class="tbl-wrap"><table><thead><tr><th>Email</th><th>Role</th><th>Debit notes</th><th>Status</th><th>Actions</th></tr></thead><tbody>' + rows + '</tbody></table></div>' +
+    '<div class="tbl-wrap"><table><thead><tr><th>Email</th><th>Role</th><th>Can open</th><th>Debit-note rights</th><th>Status</th><th>Actions</th></tr></thead><tbody>' + rows + '</tbody></table></div>' +
     '<form id="addForm" class="row" novalidate>' +
       '<div class="field"><label class="lbl" for="aEmail">Add email</label><input id="aEmail" type="email" autocapitalize="none" spellcheck="false" placeholder="name@alcoverealty.in"></div>' +
-      '<div class="field"><label class="lbl" for="aRole">Role</label><select id="aRole"><option value="management">Management</option><option value="employee">Employee</option><option value="admin">Admin</option></select></div>' +
+      '<div class="field"><label class="lbl" for="aRole">Role</label><select id="aRole"><option value="management">Management</option><option value="ea">Executive Assistant</option><option value="employee">Employee</option><option value="admin">Admin</option></select></div>' +
       '<div class="field"><label class="lbl" for="aPw">Temporary password</label><input id="aPw" type="text" spellcheck="false" autocomplete="off"></div>' +
       '<button class="btn primary" type="submit">Add</button></form>' +
-    '<p class="note"><b>Admin</b>: everything, including this page. <b>Management</b>: views all the data. <b>Employee</b>: views the data; data-entry tools will be added for this role.</p></section>' +
+    '<p class="note">A role sets what a person starts with; tick or untick anything per person, and changing a role resets their ticks to that role\'s defaults. ' +
+    '<b>Admin</b>: everything, including this page. <b>Management</b>: all sections, no debit-note rights. <b>Executive Assistant</b>: Credit cards and Resources; records invoices attached, submissions and committed payment dates. <b>Employee</b>: all sections, no debit-note rights.</p>' +
+    '<p class="note"><b>Debit note contributor</b> raises debit notes and resolves reconciliation. The other rights are each one step after it, so different people can record them.</p></section>' +
 
     '<section class="blk"><h3>Update the dashboard</h3><p class="note" style="margin:0">Choose the unprotected dashboard file from your computer (Saurabh_Baid_Family_Office_Dashboard.html). It is encrypted in this browser and then published.</p>' +
     '<div class="inline"><input type="file" id="dFile" accept=".html,.htm,text/html"><button class="btn primary" type="button" id="dGo">Encrypt and publish</button></div></section>' +
@@ -645,7 +664,12 @@ function renderAdmin() {
   $("tokGo").onclick = saveToken;
   for (const b of $("admBody").querySelectorAll("button[data-a]")) b.onclick = () => userAction(b.dataset.a, b.dataset.e, b);
   for (const s of $("admBody").querySelectorAll("select.rolesel")) s.onchange = () => setRole(s.dataset.e, s.value, s);
-  for (const k of $("admBody").querySelectorAll("input.dnchk")) k.onchange = () => setDn(k.dataset.e, k.checked, k);
+  for (const k of $("admBody").querySelectorAll("input.permchk")) k.onchange = () => setPerm(k.dataset.e, k.dataset.kind, k.dataset.k, k.checked, k);
+}
+function permCell(u, kind, names, have) {
+  if (roleOf(u) === "admin") return '<td><div class="perms all">Everything</div></td>';
+  return '<td><div class="perms">' + Object.keys(names).map(k => '<label class="dnsw"><input type="checkbox" class="permchk" data-e="' + esc(u.email) + '" data-kind="' + kind + '" data-k="' + k + '"' +
+    (have.includes(k) ? " checked" : "") + "> <span>" + esc(names[k]) + "</span></label>").join("") + "</div></td>";
 }
 $("adminBtn").onclick = () => { $("admResult").innerHTML = ""; admMsg(""); renderAdmin(); $("admin").showModal(); };
 
@@ -668,15 +692,19 @@ function addUser() {
     renderAdmin(); showTemp(email, pw, "Added.");
   });
 }
-function setDn(email, on, box) {
+function setPerm(email, kind, key, on, box) {
+  const names = kind === "access" ? SECTIONS : RIGHTS; if (!names[key]) return;
   box.disabled = true; admMsg("");
-  commitChange((on ? "Allow " : "Stop ") + email + " raising debit notes", async doc => {
+  commitChange((on ? "Give " : "Remove ") + email + " " + names[key], async doc => {
     const u = findUser(doc, email);
     if (!u) throw new Error(email + " no longer has access.");
-    if (on) u.dn = true; else delete u.dn;
+    const now = new Set(kind === "access" ? accessOf(u) : rightsOf(u));
+    if (on) now.add(key); else now.delete(key);
+    u[kind] = Object.keys(names).filter(k => now.has(k));
+    if (kind === "rights") delete u.dn;   // replaced by the explicit list
     Object.assign(u, { updated: new Date().toISOString(), updatedBy: state.me });
     return [usersFile(doc)];
-  }).then(() => { renderAdmin(); admMsg(email + (on ? " can now raise debit notes and record payments." : " can no longer raise debit notes."), true); })
+  }).then(() => { renderAdmin(); admMsg(email + (on ? " now has " : " no longer has ") + names[key] + ".", true); })
     .catch(err => { renderAdmin(); admMsg(err.message || "Couldn't save. Try again."); });
 }
 function setRole(email, role, sel) {
@@ -685,11 +713,11 @@ function setRole(email, role, sel) {
   commitChange("Set role of " + email + " to " + ROLES[role], async doc => {
     const u = findUser(doc, email);
     if (!u) throw new Error(email + " no longer has access.");
-    u.role = role;
+    u.role = role; delete u.access; delete u.rights; delete u.dn;   // start from the new role's defaults
     if (!doc.users.some(x => roleOf(x) === "admin")) throw new Error("At least one admin must remain.");
     Object.assign(u, { updated: new Date().toISOString(), updatedBy: state.me });
     return [usersFile(doc)];
-  }).then(() => { renderAdmin(); admMsg(email + " is now " + ROLES[role] + ".", true); })
+  }).then(() => { renderAdmin(); admMsg(email + " is now " + ROLES[role] + ", with that role's default access.", true); })
     .catch(err => { renderAdmin(); admMsg(err.message || "Couldn't change the role. Try again."); });
 }
 function userAction(action, email, btn) {
