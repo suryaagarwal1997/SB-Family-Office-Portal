@@ -73,6 +73,23 @@
    "ck": "kTvbsu3CYnf3p03G6tyfprpmuBW32c5kKvpE/IlG0JBQTCtry39YEMakEKJF+6lh61JBD27dfAsVLgyDoWW7tQub9MTsxOnfDnaqniAQSS6Bka7OvIPRML4JU4x5+MJztmX0Hz0Z/BXOsfuwtBBzd1mOWBFWmEr0YJW7Ugzl4/BmO/vlVAyjM0xWR6EjR/WsGtLG3LHp8OUF72nupNLAbH1NfACgAccribMqphfPBLLlnQMp0vtGm1unYt/uUgTDopDcZVdQPo3iuADgkiS5uQiTaLLkDbd64ubY42zdCa9TykDoljcECpd7MT7sARNCtg7scf7fGfZcatyFDS6GsA==",
    "updated": "2026-10-10T10:33:22.776Z",
    "updatedBy": "shraddha@alcoverealty.in"
+  },
+  {
+   "email": "anjan.mallick@alcoverealty.in",
+   "role": "employee",
+   "mustChange": true,
+   "kdf": {
+    "salt": "4VUn8EMbiipapZslQzGYMw==",
+    "iter": 600000
+   },
+   "priv": {
+    "iv": "ln2xmECB8LNCOxwu",
+    "ct": "yB1Ms8jqgSXK0bhQJ7qFB8nv6NoPxod498EaD9idFJpU7sUsczNRGQzNWuXaI0W/S7y8u3fRv/ppCsS3eTp68uHYGnsA9VIrsFEoiH1Vy7VhZn9XiqgE1CfljrqCnbx1s5qFeoLsfRl3F+zit2cpr8fjLHiaKL5RjfcbtZY0XvFnX3Q9tctDY97b/r1vnZpJxyT+eDhfkvzNIoeT/V2x17RFre4BmW2JNVDiLPHg6a4UsmZKFcitvSQs5Yr/iGC+lVQOj+TDY/1LkhIZC7MGqgM7pbJS9CDskl/Ul0FmFaqCvrWiVzv2qF05Rw5elHJLNt+OiUfkrv4DVkAkH8rSAeUkvFcj2SeJQ1+hhGAlpHdyXtVpqpB5trRniAylQMQIkgfJZuqDAMwwkbe3/RLx5bW3O3C1XPdO+TpbC69oO5kS00SZ1vwNHriNVeQ+8NRlhxTSGhxb9V/12aX801NmADVg5GID1FxDjY0uVtQLHXQJR+y85nW8G1yqSzq9g2ITwhvJWKIYfEcx2USjpGp+siZ48OLSo/Nh8oGZV8CYVuWtLMXh3+ONGbMHWBXe30EjYeptKsg/VsrwYxQzSNQ0tbTjK3bGv7OyhAQzp19jjibIoKkdi+boHMZnInTLsFjyFNEBBmkf++Nkp5Pd/uLkVPIyq6BkxDoeriA+x5RBmRXxbfn36Ax3G0g7alNe0QGTT6UVeoPv7wbxssGZMgP4TpZZq89LlXeyLu+P4FM/qTPAgKjgD50Krv3pOHt9M+dk2p0wK+jt1WIHMKFqpd1XUmRj+jXqP+2p7NZc+gCiV8PQbPhmvUpVCjEfqJmrPwWz3fDqYupyNzyjfYCw4pxVKZtsjdSP276c8Ud2DAFXq7UZXOvkTFuo3UIe/2bmRbA11d+MXjmHpph4ztUqnt13o8GvNiUiPBtEjkPDBue4eZBfcysRPjhJ4B3PAsUkma+CkvrA8WgHIt/QF29H3Voj+NFo0Ss2WDGoS7D/JOlRiCNcxzehyPb+u320AWSciMNmv3VPBOffTdTafl7mMxPWoWEb4sSl4Q9TmYYXBUa4cmU3YEJvAYBjWW2m8/jHbUnMJouXfFsYBSaNnXBWqxCHypfBLEtdUVMWptsPXuOcCZWciaUAcukjeLQAWE26xTxijL+F10PalMQOK59pC4yAMt6KFNgPZAjdtstO5lbwZKCHzy0cebVHHjviYp3qGCH/j9KV+LleBmub4DbBS+HfrSJTVGPZJ/gr9ODXUj1Qm+bqonulLJZtIzejL8OfbxbgGUxe/iiDiii+Kq8Jf+us3shd6AmRYkMCBP13KcP+dVUcw1RAjMfLsIfuy8rcWCQKXhOMIoFLStXro83Meito2+/mcqbkoHyUoczkDtNkwDes+8zsfcBZ6yjX2Kymrxzoxq0BBSOrMWbtIrV1kLQwEDGGWXoAKn9s87RHKkOnSusoXRg1iKxycl2iipAWbxGz9WMFtEYl8ynsnhdbNcM/sTMBohHiC7X9BFimH2MWlvWH99O0Cj65uuWpRYbMVH66TYEuzIgRwOXScWZh/rUzpp2JntZAYvfnz9ZePWYyTfEZiMbx/rSwwhovw5jCn/SypWF+5rouTWvhtpK28tAVoBx8JfHGDGCu4sVM6hjOhCKG"
+   },
+   "pub": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvyhF3ygtVvYvrvlXV93Dw2X5DokJHuoP3wJ3UTlFo0W5IxlCL0hL/i3PyML7TAx4tUGgq9C1Vt3cj/yq2/YRNr6lBs3ClQ64PN5kuZFK+8hBgGxoVRZLFuvNR1d7NF4h/NnnORIbMEnFFnPbaXoShT06mzs5DvfDNcZGGT6HHOx8GSIZH5Uj+M40mUBbHFTPCHzboXvoA5ou3ogX/+Koup9IXLKmNDvDt6JID92dwTpkb1Bkj/Fikxs3Pr5dFQ/UdTNHgRpIRbBx4l9gxneYhzuqfEjuoYDW0alt964Im/AKcVbiw37oKmMtIfPfwrReDWUYNcNWJ5jQXwQMG+176wIDAQAB",
+   "ck": "pQBBzGik1bj2qhyBKxx30rGWIdz5Bn6+uLrQ2+6EcOBXMKGtjC8+WjawZFDuC1RM8GWEdSAgbATlXv092+dd2Q8v5A1e/nFQz5/cV+khgxRzQG77yg9wnX2g+MowGxbXY8PHQB7s162l4NOLPnu8VCPU3lUwqHZcE0JWuwFQGPFH48iemROajozc4SP3UNh0YQhqLKXWLECilUs0jkkZkf9WEno/XAF60IHns/49esE+U037/qXBU/hhg0uu8ZCZXFncdYH6wt4e9u7tP2cDU2Ym4fsRNMk1vKZ+BKexoPi8Xh04u/8UlzQxY+O4qLU/6g25vxqnBT6vziFOWbwVZQ==",
+   "updated": "2026-10-11T11:04:10.216Z",
+   "updatedBy": "surya.agarwal@alcoverealty.in"
   }
  ]
 }
