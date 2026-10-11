@@ -109,8 +109,12 @@
    },
    "pub": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAr5aBMzUA2wBGcf8Zvu+ftYhi+TJlgR7qUGkB1juVSfQGmv1eNbt9eb+lr6x44baafgF3u/Yjokhefl977OwqfmqAxyeHqvegeH3Q0zC9Fd3V9yPBfWe4Vmm5UR+pNJ4S/m1LrfhA8Bbk9sN2tRmnPg7NV9Hya4mm+k8xAem/31kw61js3UL/y7fgoni7kvcsWbgVFBN6u0mTHNlsfIQsGGAVLOs8Slk9lWd7U4hd+LACsHX7Eez+eNXCM2P2pcitRHB9Hn4bLfJuImq4atGkVQHD0NCwZQyA2/8BsubQTZ9Vj5tZqjH8TThUjM/YzzBY2J3HwTGDHMg669xRRCAZOQIDAQAB",
    "ck": "KWGIrVNDLfPNTAtkxvCIyUrgtnvXVHNW+NFSJIbmpz+n1R5LoJ5tLH5k0IDQl5cyQU488cCaQ0RJZ0K3ZF+MWawTyctHi8FAdd28D2OPoO6rwEdc0E98PiUvx6r45k/6pL5j/ZQBENtWfE9NzT8XTkUo84IabJyYSAPF/uf3hvf6v3X+BLTo5dydWiK3ghbhRVnRxXgE0m4gF5txSSm+JevNUzvLRvzojB+QK6ASE+gGCoLLtfQnl6j4mNa8SzLrAGjx26u6zjedqb/NO5G2OTHCyblyp5BXd2SNbVPfoF3blN6pGXEjz0JiT+EbnB8Q2y0M2hdZcI3wNRLDT9HHBA==",
-   "updated": "2026-10-11T14:46:24.650Z",
-   "updatedBy": "surya.agarwal@alcoverealty.in"
+   "updated": "2026-10-11T14:46:48.654Z",
+   "updatedBy": "surya.agarwal@alcoverealty.in",
+   "rights": [
+    "invoices",
+    "committed"
+   ]
   }
  ]
 }
