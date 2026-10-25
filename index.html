@@ -228,6 +228,7 @@ a{color:var(--accent)}
       <button type="button" data-open="SBFO_openResources" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 6.5h6l2 2h9v10h-17z"/></svg>Resources</button>
       <button type="button" data-open="SBFO_openSources" hidden><i aria-hidden="true"></i>Data sources</button>
       <button type="button" data-open="SBFO_openReports" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3.5h8l4 4v13H6z M14 3.5v4h4 M9 12.5h6 M9 16h6"/></svg>Reports</button>
+      <button type="button" data-open="SBFO_openCaFlags" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 20.5V4 M6 4.5h11l-2.5 4 2.5 4H6"/></svg>Flags for CA</button>
     </nav>
     <span class="sp"></span>
     <nav class="bar-acts">
@@ -445,11 +446,11 @@ function refreshSessionKey() {
    Admin always has everything. These choices shape what the dashboard shows; they are not a security boundary. */
 const ROLES = { admin: "Admin", management: "Management", ea: "Executive Assistant", employee: "Employee" };
 const roleOf = u => !u ? "" : ROLES[u.role] ? u.role : "management";
-const SECTIONS = { finance: "Financial data", cards: "Credit cards", resources: "Resources", sources: "Data sources", reports: "Reports" };
+const SECTIONS = { finance: "Financial data", cards: "Credit cards", resources: "Resources", sources: "Data sources", reports: "Reports", caflags: "Flags for CA" };
 const RIGHTS = { raise: "Debit note contributor", submit: "Invoices attached & debit note submitted", committed: "Committed payment dates", paid: "Payment received", pay: "Credit card payments", upload: "Add to Resources" };
 const DEFAULTS = {
   admin: { access: Object.keys(SECTIONS), rights: Object.keys(RIGHTS) },
-  management: { access: Object.keys(SECTIONS), rights: [] },
+  management: { access: Object.keys(SECTIONS).filter(k => k !== "caflags"), rights: [] },   // Flags for CA only when Admin ticks it
   ea: { access: ["cards", "resources"], rights: ["submit", "committed"] },
   employee: { access: ["finance", "cards", "resources", "sources"], rights: [] }
 };
@@ -487,7 +488,7 @@ $("dash").addEventListener("load", passInsets);
 // Section links open the dashboard's own panels; each shows once the loaded dashboard offers it (desktop view only).
 $("dash").addEventListener("load", () => {
   let any = false;
-  const need = { SBFO_openCards: "cards", SBFO_openResources: "resources", SBFO_openSources: "sources", SBFO_openReports: "reports" }, mine = state.doc ? accessOf(me()) : [];
+  const need = { SBFO_openCards: "cards", SBFO_openResources: "resources", SBFO_openSources: "sources", SBFO_openReports: "reports", SBFO_openCaFlags: "caflags" }, mine = state.doc ? accessOf(me()) : [];
   for (const b of $("mods").querySelectorAll("[data-open]")) {
     let ok = false; try { ok = typeof $("dash").contentWindow[b.dataset.open] === "function" && mine.includes(need[b.dataset.open]); } catch (e) {}
     b.hidden = !ok; any = any || ok;
@@ -693,7 +694,7 @@ function renderAdmin() {
       '<div class="field"><label class="lbl" for="aPw">Temporary password</label><input id="aPw" type="text" spellcheck="false" autocomplete="off"></div>' +
       '<button class="btn primary" type="submit">Add</button></form>' +
     '<p class="note">A role sets what a person starts with; tick or untick anything per person, and changing a role resets their ticks to that role\'s defaults. ' +
-    '<b>Admin</b>: everything, including this page. <b>Management</b>: all sections, no debit-note rights. <b>Executive Assistant</b>: Credit cards and Resources; records invoices attached &amp; debit note submitted, and committed payment dates. <b>Employee</b>: all sections, no debit-note rights.</p>' +
+    '<b>Admin</b>: everything, including this page. <b>Management</b>: all sections except Flags for CA, no debit-note rights. <b>Flags for CA</b> (open points for the accountant or CA) is shown only to people you tick. <b>Executive Assistant</b>: Credit cards and Resources; records invoices attached &amp; debit note submitted, and committed payment dates. <b>Employee</b>: all sections, no debit-note rights.</p>' +
     '<p class="note"><b>Debit note contributor</b> raises debit notes and resolves reconciliation. The other rights are the steps after it (invoices attached &amp; submitted, committed payment date, payment received), so different people can record them. <b>Credit card payments</b> records what was paid to the bank on each card statement, in full or in part. <b>Add to Resources</b> lets the person upload documents into Resources.</p></section>' +
 
     '<section class="blk"><h3>Update the dashboard</h3><p class="note" style="margin:0">Choose the unprotected dashboard file from your computer (Saurabh_Baid_Family_Office_Dashboard.html). It is encrypted in this browser and then published.</p>' +
