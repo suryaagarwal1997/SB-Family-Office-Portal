@@ -37,8 +37,16 @@
    },
    "pub": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA2wnb2qrIToQom2FIDk0CA+/sqdNmtlGvJQ3qsIJkXHyCJTmN9QnUuS9tAvFOE5Vea2KK2luGdPAj8ybcM0w+L0simxCjUVXfPvDgcZyxPzkqbGZes/CIL5NTgupRnkVYK+b/ETUkKbLJdI/SsSffvkYNODy4AW3K1mFZTCEYXp30+bmmP3fuZjTVqGrZFjjJFtZlwgFXleqH6xnYhZYqDHZbdwevJ920UT6GlEXHTrkvEOctTkxLwxe9d6GsImIIjhrwo5PI97CYNfB9XbkyOGPEp5DS4v82gwKH+VAwYsivFKvhwd885Nh0oZ9k6d5BB/A7Pr1FBXPVcZHXTok83wIDAQAB",
    "ck": "yPhlyVpaRlmKsLDn1JJ3XkdIulQuZ61MshknBHJI5Oavin/q9bmhDmf38/ehlH9BseesEbe5fuEZjsGqEroCRBx4Nf0dfGy4f2UIykRnEnKbQ7QY7v/EMNs8DiCqrpe24N8Jp9VFUie+2Vf4ACHlrppf25gtBO1m/duMvpv9NDgqF+u5d7HxpvNHlPiRjUR7PAc4cYuNTLGZ44mq8lTuB32zcpXDvZxxxiuuNJZSPbVv7Vl5OT3LtfwuiuEPjBj12EfIXra8HnXVDMxdHCx/pP6WJ6I44AdQWAOMBtzk6U88R19F7OMaU+b8P/h9JLQNviFInwACoHT2GSoXh4WlWQ==",
-   "updated": "2026-10-26T05:25:06.922Z",
-   "updatedBy": "finance.srpl@alcoverealty.in"
+   "updated": "2026-10-26T05:25:43.310Z",
+   "updatedBy": "surya.agarwal@alcoverealty.in",
+   "access": [
+    "finance",
+    "cards",
+    "resources",
+    "sources",
+    "reports",
+    "caflags"
+   ]
   },
   {
    "email": "sb@alcoverealty.in",
