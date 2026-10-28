@@ -210,7 +210,7 @@ a{color:var(--accent)}
         <label class="lbl" for="spConf">Confirm new password</label>
         <input id="spConf" type="password" autocomplete="new-password" required>
       </div>
-      <p class="note" style="margin:-4px 0 18px">At least 10 characters: letters, numbers or both.</p>
+      <p class="note" style="margin:-4px 0 18px">At least 9 characters: letters, numbers or both.</p>
       <button class="btn primary wide" id="spGo" type="submit">Save and continue</button>
       <div class="msg err" id="spMsg" role="alert" aria-live="assertive"></div>
     </form>
@@ -265,7 +265,7 @@ a{color:var(--accent)}
         <label class="lbl" for="cpConf">Confirm new password</label>
         <input id="cpConf" type="password" autocomplete="new-password" required>
       </div>
-      <p class="note" style="margin:-4px 0 16px">At least 10 characters: letters, numbers or both.</p>
+      <p class="note" style="margin:-4px 0 16px">At least 9 characters: letters, numbers or both.</p>
       <button class="btn primary wide" id="cpGo" type="submit">Change password</button>
       <div class="msg" id="cpMsg" role="status" aria-live="polite"></div>
     </form>
@@ -358,8 +358,8 @@ function tempPassword() {
   const s = Array.from(r, x => A[x % A.length]).join("");
   return s.slice(0, 4) + "-" + s.slice(4, 8) + "-" + s.slice(8);
 }
-function pwProblem(pw) {   // any characters, at least 10
-  return pw.length < 10 ? "Use at least 10 characters." : "";
+function pwProblem(pw) {   // any characters, at least 9
+  return pw.length < 9 ? "Use at least 9 characters." : "";
 }
 
 /* One-time setup helper: builds the first users.json and dashboard.enc. Not used by the site itself. */
