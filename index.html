@@ -210,7 +210,7 @@ a{color:var(--accent)}
         <label class="lbl" for="spConf">Confirm new password</label>
         <input id="spConf" type="password" autocomplete="new-password" required>
       </div>
-      <p class="note" style="margin:-4px 0 18px">At least 10 characters. Avoid simple number runs and your name.</p>
+      <p class="note" style="margin:-4px 0 18px">At least 10 characters: letters, numbers or both.</p>
       <button class="btn primary wide" id="spGo" type="submit">Save and continue</button>
       <div class="msg err" id="spMsg" role="alert" aria-live="assertive"></div>
     </form>
@@ -265,7 +265,7 @@ a{color:var(--accent)}
         <label class="lbl" for="cpConf">Confirm new password</label>
         <input id="cpConf" type="password" autocomplete="new-password" required>
       </div>
-      <p class="note" style="margin:-4px 0 16px">At least 10 characters.</p>
+      <p class="note" style="margin:-4px 0 16px">At least 10 characters: letters, numbers or both.</p>
       <button class="btn primary wide" id="cpGo" type="submit">Change password</button>
       <div class="msg" id="cpMsg" role="status" aria-live="polite"></div>
     </form>
@@ -304,7 +304,6 @@ const CONFIG = (() => {
 })();
 const API = "https://api.github.com/repos/" + CONFIG.owner + "/" + CONFIG.repo;
 const SESSION_KEY = "sbfo_session";
-const COMMON = ["123456789", "1234567890", "12345678910", "password", "password1", "password123", "qwerty123", "qwertyuiop", "iloveyou", "admin12345", "surya.agarwal", "alcoverealty"];
 
 const $ = id => document.getElementById(id);
 const te = new TextEncoder(), td = new TextDecoder();
@@ -359,12 +358,8 @@ function tempPassword() {
   const s = Array.from(r, x => A[x % A.length]).join("");
   return s.slice(0, 4) + "-" + s.slice(4, 8) + "-" + s.slice(8);
 }
-function pwProblem(pw, email) {
-  const l = pw.toLowerCase(), local = normEmail(email).split("@")[0];
-  if (pw.length < 10) return "Use at least 10 characters.";
-  if (COMMON.includes(l) || /^\d+$/.test(pw) || /^(.)\1+$/.test(pw)) return "That password is too easy to guess. Pick another.";
-  if (local.length >= 4 && l.includes(local)) return "Don't include your email name in the password.";
-  return "";
+function pwProblem(pw) {   // any characters, at least 10
+  return pw.length < 10 ? "Use at least 10 characters." : "";
 }
 
 /* One-time setup helper: builds the first users.json and dashboard.enc. Not used by the site itself. */
