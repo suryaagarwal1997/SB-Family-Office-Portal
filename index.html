@@ -227,6 +227,7 @@ a{color:var(--accent)}
       <button type="button" data-open="SBFO_openCards" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 6.5h17v11h-17z M3.5 10h17 M7 14.5h4"/></svg>Credit cards</button>
       <button type="button" data-open="SBFO_openResources" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 6.5h6l2 2h9v10h-17z"/></svg>Resources</button>
       <button type="button" data-open="SBFO_openSources" hidden><i aria-hidden="true"></i>Data sources</button>
+      <button type="button" data-open="SBFO_openComparatives" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19.5h16 M5 15.5l4.5-4.5 3.5 3 6-6.5 M15 7.5h4v4"/></svg>Comparatives</button>
       <button type="button" data-open="SBFO_openReports" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3.5h8l4 4v13H6z M14 3.5v4h4 M9 12.5h6 M9 16h6"/></svg>Reports</button>
       <button type="button" data-open="SBFO_openCaFlags" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 20.5V4 M6 4.5h11l-2.5 4 2.5 4H6"/></svg>Flags for CA</button>
     </nav>
@@ -483,7 +484,7 @@ $("dash").addEventListener("load", passInsets);
 // Section links open the dashboard's own panels; each shows once the loaded dashboard offers it (desktop view only).
 $("dash").addEventListener("load", () => {
   let any = false;
-  const need = { SBFO_openCards: "cards", SBFO_openResources: "resources", SBFO_openSources: "sources", SBFO_openReports: "reports", SBFO_openCaFlags: "caflags" }, mine = state.doc ? accessOf(me()) : [];
+  const need = { SBFO_openCards: "cards", SBFO_openResources: "resources", SBFO_openSources: "sources", SBFO_openReports: "reports", SBFO_openCaFlags: "caflags", SBFO_openComparatives: "finance" }, mine = state.doc ? accessOf(me()) : [];
   for (const b of $("mods").querySelectorAll("[data-open]")) {
     let ok = false; try { ok = typeof $("dash").contentWindow[b.dataset.open] === "function" && mine.includes(need[b.dataset.open]); } catch (e) {}
     b.hidden = !ok; any = any || ok;
